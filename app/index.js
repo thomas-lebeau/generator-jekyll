@@ -56,7 +56,7 @@ JekyllGenerator.prototype.app = function app() {
   this.mkdir('app/templates');
 
   this.copy('_package.json', 'package.json');
-  this.copy('_component.json', 'component.json');
+  this.copy('_bower.json', 'bower.json');
 };
 
 JekyllGenerator.prototype.projectfiles = function projectfiles() {
