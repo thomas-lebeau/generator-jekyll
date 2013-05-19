@@ -48,8 +48,13 @@ JekyllGenerator.prototype.askFor = function askFor() {
     console.log(welcome);
 
     var prompts = [{
-        name: 'someOption',
-        message: 'Would you like to enable this option?',
+        name: 'bootstrap',
+        message: 'Would you like to use Bootstrap?',
+        default: 'Y/n',
+        warning: 'Yes: Enabling this will be totally awesome!'
+    },{
+        name: 'fontawesome',
+        message: 'Would you like to use Font Awesome?',
         default: 'Y/n',
         warning: 'Yes: Enabling this will be totally awesome!'
     }];
@@ -59,13 +64,11 @@ JekyllGenerator.prototype.askFor = function askFor() {
             return this.emit('error', err);
         }
 
-        this.someOption = (/y/i).test(props.someOption);
+        this.bootstrap = (/y/i).test(props.bootstrap);
+        this.fontawesome = (/y/i).test(props.fontawesome);
 
         cb();
     }.bind(this));
-
-    this.bootstrap = false;
-    this.fontawesome = false;
 
 };
 
@@ -104,22 +107,30 @@ JekyllGenerator.prototype.h5bp = function h5bp() {
 
 JekyllGenerator.prototype.mainStylesheet = function mainStylesheet() {
     if (this.bootstrap) {
-        var css = css + '@import "../bower_components/bootstrap/less/bootstrap.less";\n@import "../bower_components/bootstrap/less/responsive.less"; // Don\'t forget to comment lines 22 to remove the second import call to **mixin.less**\n\n';
+        var css = '@import "../../bower_components/bootstrap/less/bootstrap.less";\n@import "../../bower_components/bootstrap/less/responsive.less"; // Don\'t forget to comment lines 22 to remove the second import call to **mixin.less**\n\n';
 
         if (this.fontawesome) {
-            css = css + '@import "../bower_components/font-awesome/less/font-awesome.less";\n@FontAwesomePath: "../fonts";\n';
+            css = css + '@import "../../bower_components/font-awesome/build/assets/font-awesome/less/font-awesome.less";\n@FontAwesomePath: "../fonts";\n\n';
         } else {
             css = css + '@iconSpritePath: "../images/glyphicons-halflings.png";\n@iconWhiteSpritePath: "../images/glyphicons-halflings-white.png";\n\n';
         }
         css = css + '.hero-unit {\n  margin: 50px auto 0 auto;\n}';
         this.write('app/assets/styles/main.less', css);
-    } else {
-        this.copy('h5bp.css', 'app/assets/styles/h5bp.css');
         this.layoutFile = this.appendStyles(this.layoutFile, '/assets/styles/main.css', [
+            '/assets/styles/main.css'
+        ]);
+    } else {
+        var cssFiles = [
             '/bower_components/normalize-css/normalize.css',
             '/assets/styles/h5bp.css'
-        ]);
+        ];
 
+        if (this.fontawesome) {
+            cssFiles.push('/bower_components/font-awesome/css/font-awesome.css');
+        }
+
+        this.copy('h5bp.css', 'app/assets/styles/h5bp.css');
+        this.layoutFile = this.appendStyles(this.layoutFile, '/assets/styles/main.css', cssFiles);
     }
 
 };
