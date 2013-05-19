@@ -6,7 +6,9 @@
     "yeoman-generator",
     "yeoman",
     "generator",
-    "jekyll"
+    "jekyll",
+    "h5bp",
+    "modernizr"
   ],
   "homepage": "https://github.com/Thomas-Lebeau/generator-jekyll",
   "bugs": "https://github.com/Thomas-Lebeau/generator-jekyll/issues",
