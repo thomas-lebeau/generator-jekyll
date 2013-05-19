@@ -6,33 +6,42 @@ var helpers = require('yeoman-generator').test;
 
 
 describe('jekyll generator', function () {
-  beforeEach(function (done) {
-    helpers.testDirectory(path.join(__dirname, 'temp'), function (err) {
-      if (err) {
-        return done(err);
-      }
+    beforeEach(function (done) {
+        helpers.testDirectory(path.join(__dirname, 'temp'), function (err) {
+            if (err) {
+                return done(err);
+            }
 
-      this.app = helpers.createGenerator('jekyll:app', [
-        '../../app'
-      ]);
-      done();
-    }.bind(this));
-  });
-
-  it('creates expected files', function (done) {
-    var expected = [
-      // add files you expect to exist here.
-      '.jshintrc',
-      '.editorconfig'
-    ];
-
-    helpers.mockPrompt(this.app, {
-      'someOption': 'Y'
+            this.app = helpers.createGenerator('jekyll:app', [
+                '../../app', [
+                    helpers.createDummyGenerator(),
+                    'mocha:app'
+                ]
+            ]);
+            done();
+        }.bind(this));
     });
 
-    this.app.run({}, function () {
-      helpers.assertFiles(expected);
-      done();
+    it('creates expected files', function (done) {
+        var expected = [
+            ['bower.json', /"name": "temp"/],
+            ['package.json', /"name": "temp"/],
+            'Gruntfile.js',
+            'app/404.html',
+            'app/favicon.ico',
+            'app/robots.txt',
+            'app/index.html',
+            'app/assets/scripts/main.js'
+        ];
+
+        helpers.mockPrompt(this.app, {
+            'someOption': 'Y'
+        });
+
+        this.app.options['skip-install'] = true;
+        this.app.run({}, function () {
+            helpers.assertFiles(expected);
+            done();
+        });
     });
-  });
 });
