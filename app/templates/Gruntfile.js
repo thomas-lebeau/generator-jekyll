@@ -26,6 +26,10 @@ module.exports = function (grunt) {
     grunt.initConfig({
         yeoman: yeomanConfig,
         watch: {
+            recess: {
+                files: ['<%%= yeoman.app %>/assets/styles/{,*/}*.less'],
+                tasks: ['recess']
+            },
             livereload: {
                 files: [
                     '<%%= yeoman.app %>/_posts/*.md',
@@ -98,11 +102,11 @@ module.exports = function (grunt) {
             },
             all: [
                 'Gruntfile.js',
-                '<%%= yeoman.app %>/scripts/{,*/}*.js',
-                '!<%%= yeoman.app %>/scripts/vendor/*',
+                '<%%= yeoman.app %>/assets/scripts/{,*/}*.js',
+                '!<%%= yeoman.app %>/assets/scripts/vendor/*',
                 'test/spec/{,*/}*.js'
             ]
-        },
+        },<% if (testFramework === 'mocha') { %>
         mocha: {
             all: {
                 options: {
@@ -110,17 +114,25 @@ module.exports = function (grunt) {
                     urls: ['http://localhost:<%%= connect.options.port %>/index.html']
                 }
             }
-        },
-        /*recess: {
-          dist: {
-            options: {
-              compile: true
-            },
-            files: {
-              '<%%= yeoman.app %>/styles/main.css': ['<%%= yeoman.app %>/styles/main.less']
+        },<% } else if (testFramework === 'jasmine') { %>
+        jasmine: {
+            all: {
+                /*src: '',*/
+                options: {
+                    specs: 'test/spec/{,*/}*.js'
+                }
             }
-          }
-        },*/
+        },<% } %>
+        recess: {
+            dist: {
+                options: {
+                    compile: true
+                },
+                files: {
+                    '<%%= yeoman.app %>/assets/styles/main.css': ['<%%= yeoman.app %>/assets/styles/main.less']
+                }
+            }
+        },
         // not used since Uglify task does concat,
         // but still available if needed
         /*concat: {
@@ -228,6 +240,18 @@ module.exports = function (grunt) {
                         'assets/fonts/*'
                     ]
                 }]
+            },
+            server: {
+                files: [{
+                    expand: true,
+                    dot: true,<% if (fontawesome) { %>
+                    cwd: '<%%= yeoman.app %>/bower_components/font-awesome/build/assets/font-awesome/font/',
+                    dest: '<%%= yeoman.app %>/assets/fonts/',
+                    src: ['*']<% } else if (bootstrap) { %>
+                    cwd: '<%%= yeoman.app %>/bower_components/bootstrap/img/',
+                    dest: '<%%= yeoman.app %>/assets/images/',
+                    src: ['*']<% } %>
+                }]
             }
         },
         concurrent: {
@@ -247,7 +271,9 @@ module.exports = function (grunt) {
         }
 
         grunt.task.run([
-            'clean:server',
+            'clean:server',<% if (bootstrap) { %>
+            'recess',<% } %>
+            'copy:server',
             'jekyll',
             'livereload-start',
             'connect:livereload',
@@ -257,14 +283,19 @@ module.exports = function (grunt) {
     });
 
     grunt.registerTask('test', [
-        'clean:server',
+        'clean:server',<% if (bootstrap) { %>
+        'recess',<% } %>
+        'copy:server',
         'jekyll',
-        'connect:test',
-        'mocha'
+        'connect:test',<% if (testFramework === 'mocha') { %>
+        'mocha'<% } else if (testFramework === 'jasmine') { %>
+        'jasmine'<% } %>
     ]);
 
     grunt.registerTask('build', [
-        'clean:dist',
+        'clean:dist',<% if (bootstrap) { %>
+        'recess',<% } %>
+        'copy:server',
         'jekyll',
         'useminPrepare',
         'concurrent',
