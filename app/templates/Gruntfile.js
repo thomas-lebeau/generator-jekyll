@@ -271,8 +271,8 @@ module.exports = function (grunt) {
         }
 
         grunt.task.run([
-            'clean:server',
-            'recess',
+            'clean:server',<% if (bootstrap) { %>
+            'recess',<% } %>
             'copy:server',
             'jekyll',
             'livereload-start',
@@ -283,8 +283,8 @@ module.exports = function (grunt) {
     });
 
     grunt.registerTask('test', [
-        'clean:server',
-        'recess',
+        'clean:server',<% if (bootstrap) { %>
+        'recess',<% } %>
         'copy:server',
         'jekyll',
         'connect:test',<% if (testFramework === 'mocha') { %>
@@ -293,8 +293,8 @@ module.exports = function (grunt) {
     ]);
 
     grunt.registerTask('build', [
-        'clean:dist',
-        'recess',
+        'clean:dist',<% if (bootstrap) { %>
+        'recess',<% } %>
         'copy:server',
         'jekyll',
         'useminPrepare',

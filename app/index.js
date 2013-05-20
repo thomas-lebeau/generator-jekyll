@@ -126,7 +126,7 @@ JekyllGenerator.prototype.mainStylesheet = function mainStylesheet() {
         ];
 
         if (this.fontawesome) {
-            cssFiles.push('/bower_components/font-awesome/css/font-awesome.css');
+            cssFiles.push('/bower_components/font-awesome/build/assets/font-awesome/css/font-awesome.css');
         }
 
         this.copy('h5bp.css', 'app/assets/styles/h5bp.css');
@@ -137,11 +137,11 @@ JekyllGenerator.prototype.mainStylesheet = function mainStylesheet() {
 
 JekyllGenerator.prototype.writeIndex = function writeIndex() {
     // prepare default content text
-    var defaults = ['HTML5 Boilerplate'];
+    var defaults = ['Jekyll', 'HTML5 Boilerplate'];
     var contentText = [
         '        <div class="container">',
         '            <div class="hero-unit">',
-        '                <h1>\'Allo, \'Allo!</h1>',
+        '                <h1>{{ page.title }}</h1>',
         '                <p>You now have</p>',
         '                <ul>'
     ];
@@ -171,11 +171,15 @@ JekyllGenerator.prototype.writeIndex = function writeIndex() {
         ]);
     }
 
-    if (this.fontawesome) {
-        defaults.push('Font Awesome');
-    }
     if (this.bootstrap) {
-        defaults.push('Twitter Bootstrap');
+        if (this.fontawesome) {
+            defaults.push('Twitter Bootstrap');
+        } else {
+            defaults.push('Twitter Bootstrap <i class="icon-glass"></i>');
+        }
+    }
+    if (this.fontawesome) {
+        defaults.push('Font Awesome <i class="icon-flag"></i>');
     }
 
     this.mainJsFile = 'console.log(\'\\\'Allo \\\'Allo!\');';
@@ -195,7 +199,7 @@ JekyllGenerator.prototype.writeIndex = function writeIndex() {
     ]);
 
     // append the default content
-    this.indexFile = this.indexFile.replace('<generated-content>', contentText.join('\n'));
+    this.indexFile = this.indexFile.replace('<h1>{{ page.title }}</h1>', contentText.join('\n'));
 };
 
 JekyllGenerator.prototype.app = function app() {
