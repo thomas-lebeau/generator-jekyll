@@ -25,11 +25,11 @@ module.exports = function (grunt) {
 
     grunt.initConfig({
         yeoman: yeomanConfig,
-        watch: {
+        watch: {<%  if (bootstrap) { %>
             recess: {
                 files: ['<%%= yeoman.app %>/assets/styles/{,*/}*.less'],
                 tasks: ['recess']
-            },
+            },<% } %>
             livereload: {
                 files: [
                     '<%%= yeoman.app %>/_posts/*.md',
@@ -122,7 +122,7 @@ module.exports = function (grunt) {
                     specs: 'test/spec/{,*/}*.js'
                 }
             }
-        },<% } %>
+        },<% } if (bootstrap) { %>
         recess: {
             dist: {
                 options: {
@@ -132,7 +132,7 @@ module.exports = function (grunt) {
                     '<%%= yeoman.app %>/assets/styles/main.css': ['<%%= yeoman.app %>/assets/styles/main.less']
                 }
             }
-        },
+        },<% } %>
         // not used since Uglify task does concat,
         // but still available if needed
         /*concat: {
@@ -240,7 +240,7 @@ module.exports = function (grunt) {
                         'assets/fonts/*'
                     ]
                 }]
-            },
+            }<% if (bootstrap || fontawesome) { %>,
             server: {
                 files: [{
                     expand: true,
@@ -252,7 +252,7 @@ module.exports = function (grunt) {
                     dest: '<%%= yeoman.app %>/assets/images/',
                     src: ['*']<% } %>
                 }]
-            }
+            }<% } %>
         },
         concurrent: {
             dist: [
@@ -272,8 +272,8 @@ module.exports = function (grunt) {
 
         grunt.task.run([
             'clean:server',<% if (bootstrap) { %>
-            'recess',<% } %>
-            'copy:server',
+            'recess',<% } if (bootstrap || fontawesome) { %>
+            'copy:server',<% } %>
             'jekyll',
             'livereload-start',
             'connect:livereload',
@@ -284,8 +284,8 @@ module.exports = function (grunt) {
 
     grunt.registerTask('test', [
         'clean:server',<% if (bootstrap) { %>
-        'recess',<% } %>
-        'copy:server',
+        'recess',<% } if (bootstrap || fontawesome) { %>
+        'copy:server',<% } %>
         'jekyll',
         'connect:test',<% if (testFramework === 'mocha') { %>
         'mocha'<% } else if (testFramework === 'jasmine') { %>
@@ -294,8 +294,8 @@ module.exports = function (grunt) {
 
     grunt.registerTask('build', [
         'clean:dist',<% if (bootstrap) { %>
-        'recess',<% } %>
-        'copy:server',
+        'recess',<% } if (bootstrap || fontawesome) { %>
+        'copy:server',<% } %>
         'jekyll',
         'useminPrepare',
         'concurrent',
