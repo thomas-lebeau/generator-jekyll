@@ -3,9 +3,11 @@
 
 A generator for Yeoman to bootstrap a Jekyll blog.
 
+## Dependencies
+- [yo](https://github.com/yeoman/yo) `npm install -g yo`
+- [Jekyll](http://jekyllrb.com/) `gem install jekyll`
+
 ## Getting started
-- Make sure you have [yo](https://github.com/yeoman/yo) installed:
-    `npm install -g yo`
 - Install the generator: `npm install [-g] generator-jekyll`
 - Run: `yo jekyll`to scaffold your project
 - Run `grunt` for building and `grunt server` for preview
