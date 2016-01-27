@@ -1,5 +1,5 @@
 # Generator jekyll
-[![Build Status](https://secure.travis-ci.org/Thomas-Lebeau/generator-jekyll.png?branch=master)](https://travis-ci.org/Thomas-Lebeau/generator-jekyll)
+[![Build Status](https://secure.travis-ci.org/thomas-lebeau/generator-jekyll.png?branch=master)](https://travis-ci.org/thomas-lebeau/generator-jekyll)
 
 A generator for Yeoman to bootstrap a Jekyll blog.
 
